@@ -2,6 +2,7 @@ package com.eijteam.swarm.and.hive.modules.user.entities;
 
 import com.eijteam.swarm.and.hive.modules.card.entities.Card;
 import com.eijteam.swarm.and.hive.modules.stage.entities.Stage;
+import com.eijteam.swarm.and.hive.modules.user.DTOs.UpdateUserDTO;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,6 +34,10 @@ public class User implements Serializable {
     public User(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public void update(String name) {
+        if(name != null) this.name = name;
     }
 
     public Long getId() {

@@ -27,7 +27,7 @@ public class Stage implements Serializable {
     private Card rewardCard;
 
     @OneToMany(mappedBy = "stage")
-    private List<Wave> waves = new ArrayList<>();
+    private Set<Wave> waves = new HashSet<>();
 
     public Stage() {}
 
@@ -49,7 +49,7 @@ public class Stage implements Serializable {
 
     public Card getRewardCard() { return rewardCard; }
 
-    public List<Wave> getWaves() { return waves; }
+    public Set<Wave> getWaves() { return waves; }
 
     @Override
     public boolean equals(Object o) {
