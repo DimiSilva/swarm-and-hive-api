@@ -1,15 +1,11 @@
 package com.eijteam.swarm.and.hive.modules.user.entities;
 
 import com.eijteam.swarm.and.hive.modules.card.entities.Card;
+import com.eijteam.swarm.and.hive.modules.stage.entities.Stage;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class User implements Serializable {
@@ -20,20 +16,23 @@ public class User implements Serializable {
     private Long id;
     private String name;
 
-    private List<Card> openCards = new ArrayList<>();
-    public User() {}
+    @ManyToMany
+    @JoinTable(name = "user_cards_deck", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "card_id"))
+    private Set<Card> deckCards = new HashSet<>();
 
-    public User(String name) {
-        this.name = name;
-    }
+    @ManyToMany
+    @JoinTable(name = "user_cards_open", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "card_id"))
+    private Set<Card> openCards = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "user_stages_completed", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "stage_id"))
+    private Set<Stage> completedStages = new HashSet<>();
+
+    public User() {}
 
     public User(Long id, String name) {
         this.id = id;
         this.name = name;
-    }
-
-    public List<Card> getOpenCards() {
-        return openCards;
     }
 
     public Long getId() {
@@ -43,6 +42,12 @@ public class User implements Serializable {
     public String getName() {
         return name;
     }
+
+    public Set<Card> getDeckCards() { return deckCards; }
+
+    public Set<Card> getOpenCards() { return openCards; }
+
+    public Set<Stage> getCompletedStages() { return completedStages; }
 
     @Override
     public boolean equals(Object o) {
