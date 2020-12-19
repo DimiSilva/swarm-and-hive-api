@@ -2,20 +2,22 @@ package com.eijteam.swarm.and.hive.modules.user.entities;
 
 import com.eijteam.swarm.and.hive.modules.card.entities.Card;
 import com.eijteam.swarm.and.hive.modules.stage.entities.Stage;
-import com.eijteam.swarm.and.hive.modules.user.DTOs.UpdateUserDTO;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
 @Entity
+@Table(name = "user_account")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String username;
+    private String email;
+    private String password;
 
     @ManyToMany
     @JoinTable(name = "user_cards_deck", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "card_id"))
@@ -31,22 +33,26 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(Long id, String name) {
+    public User(Long id, String username, String email, String password) {
         this.id = id;
-        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
     public void update(String name) {
-        if(name != null) this.name = name;
+        if(name != null) this.username = name;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getUsername() { return username; }
+
+    public String getEmail() { return email; }
+
+    public String getPassword() { return password; }
 
     public Set<Card> getDeckCards() { return deckCards; }
 

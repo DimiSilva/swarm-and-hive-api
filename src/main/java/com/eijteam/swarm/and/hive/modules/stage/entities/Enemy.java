@@ -1,4 +1,4 @@
-package com.eijteam.swarm.and.hive.modules.enemy.entities;
+package com.eijteam.swarm.and.hive.modules.stage.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;

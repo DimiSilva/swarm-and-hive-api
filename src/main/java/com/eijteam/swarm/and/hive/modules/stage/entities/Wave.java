@@ -1,7 +1,5 @@
-package com.eijteam.swarm.and.hive.modules.wave.entities;
+package com.eijteam.swarm.and.hive.modules.stage.entities;
 
-import com.eijteam.swarm.and.hive.modules.enemy.entities.Enemy;
-import com.eijteam.swarm.and.hive.modules.stage.entities.Stage;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

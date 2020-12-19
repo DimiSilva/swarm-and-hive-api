@@ -1,10 +1,8 @@
 package com.eijteam.swarm.and.hive.modules.user.controllers;
 
-import com.eijteam.swarm.and.hive.modules.user.DTOs.InsertUserDTO;
-import com.eijteam.swarm.and.hive.modules.user.DTOs.UpdateUserDTO;
+import com.eijteam.swarm.and.hive.modules.user.DTOs.*;
 import com.eijteam.swarm.and.hive.modules.user.entities.User;
 import com.eijteam.swarm.and.hive.modules.user.services.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +17,23 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping(value = "/register")
+    public ResponseEntity<RegisterUserResDTO> register(@RequestBody RegisterUserReqDTO userDTO) {
+        User user = userService.insert(userDTO);
+        RegisterUserResDTO res = RegisterUserResDTO.fromUser(user);
+
+        URI userGetUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+
+        return ResponseEntity.created(userGetUri).body(res);
+    }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<String> login(@RequestBody LoginReqDTO loginDTO) {
+        String res = userService.login(loginDTO);
+
+        return ResponseEntity.ok(res);
+    }
+/*
     @GetMapping
     public ResponseEntity<List<User>> findAll(){
         List<User> users = userService.findAll();
@@ -31,13 +46,6 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @PostMapping
-    public ResponseEntity<User> insert(@RequestBody InsertUserDTO userDTO) {
-        User user = userService.insert(userDTO);
-        URI userGetUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(userGetUri).body(user);
-    }
-
     @PutMapping(value = "/{id}")
     public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UpdateUserDTO updatedUser) {
         User user = userService.update(id, updatedUser);
@@ -48,5 +56,5 @@ public class UserController {
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         userService.remove(id);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 }

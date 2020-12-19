@@ -3,16 +3,16 @@ package com.eijteam.swarm.and.hive.configs;
 import com.eijteam.swarm.and.hive.modules.card.entities.Card;
 import com.eijteam.swarm.and.hive.modules.card.enums.CardTypes;
 import com.eijteam.swarm.and.hive.modules.card.repositories.CardRepository;
-import com.eijteam.swarm.and.hive.modules.difficulty.entities.Difficulty;
-import com.eijteam.swarm.and.hive.modules.difficulty.repositories.DifficultyRepository;
-import com.eijteam.swarm.and.hive.modules.enemy.entities.Enemy;
-import com.eijteam.swarm.and.hive.modules.enemy.repositories.EnemyRepository;
+import com.eijteam.swarm.and.hive.modules.stage.entities.Difficulty;
+import com.eijteam.swarm.and.hive.modules.stage.entities.Enemy;
+import com.eijteam.swarm.and.hive.modules.stage.repositories.DifficultyRepository;
+import com.eijteam.swarm.and.hive.modules.stage.repositories.EnemyRepository;
 import com.eijteam.swarm.and.hive.modules.stage.entities.Stage;
 import com.eijteam.swarm.and.hive.modules.stage.repositories.StageRepository;
 import com.eijteam.swarm.and.hive.modules.user.entities.User;
 import com.eijteam.swarm.and.hive.modules.user.repositories.UserRepository;
-import com.eijteam.swarm.and.hive.modules.wave.entities.Wave;
-import com.eijteam.swarm.and.hive.modules.wave.repositories.WaveRepository;
+import com.eijteam.swarm.and.hive.modules.stage.entities.Wave;
+import com.eijteam.swarm.and.hive.modules.stage.repositories.WaveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 @Configuration
 @Profile("local")
-public class LocalConfig implements CommandLineRunner {
+public class TestConfig implements CommandLineRunner {
 
     @Autowired
     private UserRepository userRepository;
@@ -39,8 +39,8 @@ public class LocalConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User userSeed1 = new User(null, "user1");
-        User userSeed2 = new User(null, "user2");
+        User userSeed1 = new User(null, "user1", "user1@email.com", "123");
+        User userSeed2 = new User(null, "user2", "user2@email.com", "123");
 
         userRepository.saveAll(Arrays.asList(userSeed1, userSeed2));
 

@@ -1,8 +1,6 @@
 package com.eijteam.swarm.and.hive.modules.stage.entities;
 
 import com.eijteam.swarm.and.hive.modules.card.entities.Card;
-import com.eijteam.swarm.and.hive.modules.difficulty.entities.Difficulty;
-import com.eijteam.swarm.and.hive.modules.wave.entities.Wave;
 
 import javax.persistence.*;
 import java.io.Serializable;

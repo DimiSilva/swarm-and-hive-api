@@ -1,4 +1,4 @@
-package com.eijteam.swarm.and.hive.modules.difficulty.entities;
+package com.eijteam.swarm.and.hive.modules.stage.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
