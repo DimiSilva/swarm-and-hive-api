@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -18,20 +17,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/register")
-    public ResponseEntity<RegisterUserResDTO> register(@RequestBody RegisterUserReqDTO userDTO) {
-        User user = userService.insert(userDTO);
-        RegisterUserResDTO res = RegisterUserResDTO.fromUser(user);
+    public ResponseEntity<RegisterResDTO> register(@RequestBody RegisterReqDTO userDTO) {
+        RegisterResDTO res = userService.register(userDTO);
 
-        URI userGetUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+        URI userGetUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(res.id).toUri();
 
         return ResponseEntity.created(userGetUri).body(res);
-    }
-
-    @PostMapping(value = "/login")
-    public ResponseEntity<String> login(@RequestBody LoginReqDTO loginDTO) {
-        String res = userService.login(loginDTO);
-
-        return ResponseEntity.ok(res);
     }
 /*
     @GetMapping

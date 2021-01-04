@@ -2,10 +2,12 @@ package com.eijteam.swarm.and.hive.modules.user.entities;
 
 import com.eijteam.swarm.and.hive.modules.card.entities.Card;
 import com.eijteam.swarm.and.hive.modules.stage.entities.Stage;
+import com.eijteam.swarm.and.hive.modules.user.enums.Profile;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user_account")
@@ -15,9 +17,15 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String username;
+    @Column(unique = true)
     private String email;
     private String password;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="PROFILES")
+    private Set<Integer> profiles = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "user_cards_deck", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "card_id"))
@@ -31,13 +39,17 @@ public class User implements Serializable {
     @JoinTable(name = "user_stages_completed", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "stage_id"))
     private Set<Stage> completedStages = new HashSet<>();
 
-    public User() {}
+    public User() {
+        addProfile(Profile.PLAYER);
+    }
 
     public User(Long id, String username, String email, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+
+        addProfile(Profile.PLAYER);
     }
 
     public void update(String name) {
@@ -53,6 +65,14 @@ public class User implements Serializable {
     public String getEmail() { return email; }
 
     public String getPassword() { return password; }
+
+    public Set<Profile> getProfiles() {
+        return profiles.stream().map(profile -> Profile.toEnum(profile)).collect(Collectors.toSet());
+    }
+
+    public void addProfile(Profile profile) {
+        profiles.add(profile.getId());
+    }
 
     public Set<Card> getDeckCards() { return deckCards; }
 

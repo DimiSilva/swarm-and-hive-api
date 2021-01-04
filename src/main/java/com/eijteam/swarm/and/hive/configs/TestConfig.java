@@ -17,12 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
 
 @Configuration
-@Profile("local")
+@Profile("test")
 public class TestConfig implements CommandLineRunner {
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -39,8 +43,8 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User userSeed1 = new User(null, "user1", "user1@email.com", "123");
-        User userSeed2 = new User(null, "user2", "user2@email.com", "123");
+        User userSeed1 = new User(null, "user1", "user1@email.com", bCryptPasswordEncoder.encode("123"));
+        User userSeed2 = new User(null, "user2", "user2@email.com", bCryptPasswordEncoder.encode("123"));
 
         userRepository.saveAll(Arrays.asList(userSeed1, userSeed2));
 

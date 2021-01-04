@@ -1,11 +1,10 @@
 package com.eijteam.swarm.and.hive.modules.user.services;
 
 import com.eijteam.swarm.and.hive.common.exceptions.ResourceNotFoundException;
-import com.eijteam.swarm.and.hive.common.utils.JwtTokenUtil;
-import com.eijteam.swarm.and.hive.modules.user.DTOs.LoginReqDTO;
-import com.eijteam.swarm.and.hive.modules.user.DTOs.RegisterUserReqDTO;
-import com.eijteam.swarm.and.hive.modules.user.DTOs.UpdateUserDTO;
+import com.eijteam.swarm.and.hive.modules.user.DTOs.*;
 import com.eijteam.swarm.and.hive.modules.user.entities.User;
+import com.eijteam.swarm.and.hive.modules.user.exceptions.AlreadyRegisteredUserException;
+import com.eijteam.swarm.and.hive.modules.user.factories.RegisterDTOFactory;
 import com.eijteam.swarm.and.hive.modules.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,9 +18,14 @@ import java.util.Optional;
 @Service
 public class UserService {
     @Autowired
-    private UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private UserRepository userRepository;
+
+    @Autowired
+    private RegisterDTOFactory registerDTOFactory;
+
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -32,15 +36,14 @@ public class UserService {
         return user.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    public User insert(RegisterUserReqDTO userDTO) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        User user = new User(null, userDTO.username, userDTO.email, passwordEncoder.encode(userDTO.password));
-        return userRepository.save(user);
-    }
+    public RegisterResDTO register(RegisterReqDTO userDTO) {
+        User alreadyRegisteredUser = userRepository.findByEmail(userDTO.email);
+        //Incluir exception no handler
+        if(alreadyRegisteredUser != null) throw new AlreadyRegisteredUserException();
 
-    public String login(LoginReqDTO loginDTO) {
-        User user = userRepository.getByEmail(loginDTO.email);
-        return user.getUsername();
+        userDTO.password = bCryptPasswordEncoder.encode(userDTO.password);
+        User user = registerDTOFactory.reqDTOToEntity(userDTO);
+        return registerDTOFactory.createResDTO(userRepository.save(user));
     }
 
     public User update(Long id, UpdateUserDTO userDTO) {
