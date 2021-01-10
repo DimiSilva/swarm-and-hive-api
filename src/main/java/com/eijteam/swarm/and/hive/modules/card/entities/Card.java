@@ -19,14 +19,26 @@ public class Card implements Serializable {
     private String name;
     private String description;
     private String type;
+    private Float attack;
+    private Float defense;
+    private Float speed;
+    private Float attackModifier;
+    private Float defenseModifier;
+    private Float speedModifier;
 
     public Card() {}
 
-    public Card(Long id, String name, String description, CardTypes type) {
+    public Card(Long id, String name, String description, CardTypes type, Float attack, Float defense, Float speed, Float attackModifier, Float defenseModifier, Float speedModifier) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.type = type.getValue();
+        this.attack = attack;
+        this.defense = defense;
+        this.speed = speed;
+        this.attackModifier = attackModifier;
+        this.defenseModifier = defenseModifier;
+        this.speedModifier = speedModifier;
     }
 
     public Long getId() {
