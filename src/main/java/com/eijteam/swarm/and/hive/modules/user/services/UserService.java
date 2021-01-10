@@ -1,6 +1,7 @@
 package com.eijteam.swarm.and.hive.modules.user.services;
 
 import com.eijteam.swarm.and.hive.common.exceptions.ResourceNotFoundException;
+import com.eijteam.swarm.and.hive.common.interfaces.IEmailService;
 import com.eijteam.swarm.and.hive.modules.user.DTOs.*;
 import com.eijteam.swarm.and.hive.modules.user.entities.User;
 import com.eijteam.swarm.and.hive.modules.user.exceptions.AlreadyRegisteredUserException;
@@ -26,6 +27,8 @@ public class UserService {
     @Autowired
     private RegisterDTOFactory registerDTOFactory;
 
+    @Autowired
+    private IEmailService emailService;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -43,7 +46,9 @@ public class UserService {
 
         userDTO.password = bCryptPasswordEncoder.encode(userDTO.password);
         User user = registerDTOFactory.reqDTOToEntity(userDTO);
-        return registerDTOFactory.createResDTO(userRepository.save(user));
+        User registeredUser = userRepository.save(user);
+        emailService.sendRegisterConfirmationEmail(registeredUser);
+        return registerDTOFactory.createResDTO(registeredUser);
     }
 
     public User update(Long id, UpdateUserDTO userDTO) {
