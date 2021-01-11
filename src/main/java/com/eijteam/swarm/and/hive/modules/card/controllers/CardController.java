@@ -1,5 +1,6 @@
 package com.eijteam.swarm.and.hive.modules.card.controllers;
 
+import com.eijteam.swarm.and.hive.modules.card.DTOs.CardDTO;
 import com.eijteam.swarm.and.hive.modules.card.entities.Card;
 import com.eijteam.swarm.and.hive.modules.card.services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,20 @@ public class CardController {
     private CardService cardService;
 
     @GetMapping
-    public ResponseEntity<List<Card>> findAll(){
-        List<Card> cards = cardService.findAll();
+    public ResponseEntity<List<CardDTO>> findAll(){
+        List<CardDTO> cards = cardService.findAll();
         return ResponseEntity.ok().body(cards);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Card> findById(@PathVariable Long id){
-        Card card = cardService.findById(id);
+    public ResponseEntity<CardDTO> findById(@PathVariable Long id){
+        CardDTO card = cardService.findById(id);
         return ResponseEntity.ok().body(card);
+    }
+
+    @GetMapping(value = "/open-cards")
+    public ResponseEntity<List<CardDTO>> findUserOpenCards(){
+        List<CardDTO> cards = cardService.findAll();
+        return ResponseEntity.ok().body(cards);
     }
 }

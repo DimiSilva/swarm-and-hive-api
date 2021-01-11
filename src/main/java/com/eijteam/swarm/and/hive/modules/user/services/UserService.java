@@ -48,7 +48,6 @@ public class UserService {
 
     public RegisterResDTO register(RegisterReqDTO userDTO) {
         User alreadyRegisteredUser = userRepository.findByEmail(userDTO.email);
-        //Incluir exception no handler
         if(alreadyRegisteredUser != null) throw new AlreadyRegisteredUserException();
 
         userDTO.password = bCryptPasswordEncoder.encode(userDTO.password);

@@ -26,7 +26,8 @@ public class Card implements Serializable {
     private Float defenseModifier;
     private Float speedModifier;
 
-    public Card() {}
+    public Card() {
+    }
 
     public Card(Long id, String name, String description, CardTypes type, Float attack, Float defense, Float speed, Float attackModifier, Float defenseModifier, Float speedModifier) {
         this.id = id;
@@ -53,7 +54,33 @@ public class Card implements Serializable {
         return description;
     }
 
-    public String getType() { return type; }
+    public String getType() {
+        return type;
+    }
+
+    public Float getAttack() {
+        return attack;
+    }
+
+    public Float getDefense() {
+        return defense;
+    }
+
+    public Float getSpeed() {
+        return speed;
+    }
+
+    public Float getAttackModifier() {
+        return attackModifier;
+    }
+
+    public Float getDefenseModifier() {
+        return defenseModifier;
+    }
+
+    public Float getSpeedModifier() {
+        return speedModifier;
+    }
 
     @Override
     public boolean equals(Object o) {
