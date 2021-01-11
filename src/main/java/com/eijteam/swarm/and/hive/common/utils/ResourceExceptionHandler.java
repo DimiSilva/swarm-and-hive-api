@@ -2,6 +2,7 @@ package com.eijteam.swarm.and.hive.common.utils;
 
 import com.eijteam.swarm.and.hive.common.DTOs.StandardErrorDTO;
 import com.eijteam.swarm.and.hive.common.exceptions.ResourceNotFoundException;
+import com.eijteam.swarm.and.hive.modules.user.exceptions.AlreadyRegisteredUserException;
 import com.eijteam.swarm.and.hive.modules.user.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,17 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<StandardErrorDTO> userNotFound(ResourceNotFoundException e, HttpServletRequest request){
+    public ResponseEntity<StandardErrorDTO> userNotFound(UserNotFoundException e, HttpServletRequest request){
         String error = "User not found";
         HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardErrorDTO err = new StandardErrorDTO(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(AlreadyRegisteredUserException.class)
+    public ResponseEntity<StandardErrorDTO> alreadyRegisteredUser(AlreadyRegisteredUserException e, HttpServletRequest request){
+        String error = "User already registered";
+        HttpStatus status = HttpStatus.CONFLICT;
         StandardErrorDTO err = new StandardErrorDTO(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
