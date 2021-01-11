@@ -206,6 +206,16 @@ public class DBService {
                 )
         );
 
+        userSeed1.getDeckCards().addAll(
+                Arrays.asList(
+                        lavenderFlowerCard,
+                        mauveFlowerCard,
+                        sunflowerCard,
+                        workerCard
+                )
+        );
+
+
         userRepository.saveAll(
                 Arrays.asList(
                         userSeed1

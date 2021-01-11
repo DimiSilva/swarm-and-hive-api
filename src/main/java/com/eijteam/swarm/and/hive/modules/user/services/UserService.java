@@ -2,6 +2,8 @@ package com.eijteam.swarm.and.hive.modules.user.services;
 
 import com.eijteam.swarm.and.hive.common.exceptions.ResourceNotFoundException;
 import com.eijteam.swarm.and.hive.common.interfaces.IEmailService;
+import com.eijteam.swarm.and.hive.modules.card.entities.Card;
+import com.eijteam.swarm.and.hive.modules.card.repositories.CardRepository;
 import com.eijteam.swarm.and.hive.modules.user.DTOs.*;
 import com.eijteam.swarm.and.hive.modules.user.entities.User;
 import com.eijteam.swarm.and.hive.modules.user.exceptions.AlreadyRegisteredUserException;
@@ -13,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +27,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CardRepository cardRepository;
 
     @Autowired
     private RegisterDTOFactory registerDTOFactory;
@@ -46,7 +53,16 @@ public class UserService {
 
         userDTO.password = bCryptPasswordEncoder.encode(userDTO.password);
         User user = registerDTOFactory.reqDTOToEntity(userDTO);
-        User registeredUser = userRepository.save(user);
+        final User registeredUser = userRepository.save(user);
+
+        List<Card> cards = cardRepository.findAll();
+        cards.forEach(card -> {
+            registeredUser.getOpenCards().add(card);
+            registeredUser.getDeckCards().add(card);
+        });
+
+        userRepository.save(registeredUser);
+
         emailService.sendRegisterConfirmationEmail(registeredUser);
         return registerDTOFactory.createResDTO(registeredUser);
     }

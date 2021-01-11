@@ -5,6 +5,7 @@ import com.eijteam.swarm.and.hive.common.services.DBService;
 import com.eijteam.swarm.and.hive.common.services.MockEmailService;
 import com.eijteam.swarm.and.hive.common.services.SMTPEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,9 +18,12 @@ public class DevConfig implements CommandLineRunner {
     @Autowired
     private DBService dbService;
 
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String strategy;
+
     @Override
     public void run(String... args) throws Exception {
-        //dbService.instantiateSeed();
+        if("create".equals(strategy)) dbService.instantiateSeed();
     }
 
     @Bean
