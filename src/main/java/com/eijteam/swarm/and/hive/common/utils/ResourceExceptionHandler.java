@@ -1,6 +1,8 @@
 package com.eijteam.swarm.and.hive.common.utils;
 
 import com.eijteam.swarm.and.hive.common.DTOs.StandardErrorDTO;
+import com.eijteam.swarm.and.hive.common.exceptions.UnauthorizedException;
+import com.eijteam.swarm.and.hive.common.exceptions.ForbiddenException;
 import com.eijteam.swarm.and.hive.common.exceptions.ResourceNotFoundException;
 import com.eijteam.swarm.and.hive.modules.user.exceptions.AlreadyRegisteredUserException;
 import com.eijteam.swarm.and.hive.modules.user.exceptions.UserNotFoundException;
@@ -34,6 +36,22 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardErrorDTO> alreadyRegisteredUser(AlreadyRegisteredUserException e, HttpServletRequest request){
         String error = "User already registered";
         HttpStatus status = HttpStatus.CONFLICT;
+        StandardErrorDTO err = new StandardErrorDTO(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<StandardErrorDTO> forbidden(ForbiddenException e, HttpServletRequest request){
+        String error = "Forbidden";
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardErrorDTO err = new StandardErrorDTO(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<StandardErrorDTO> authentication(UnauthorizedException e, HttpServletRequest request){
+        String error = "Unauthorized";
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         StandardErrorDTO err = new StandardErrorDTO(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
