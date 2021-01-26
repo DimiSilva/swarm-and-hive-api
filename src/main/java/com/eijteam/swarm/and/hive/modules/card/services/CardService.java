@@ -65,4 +65,32 @@ public class CardService {
         Set<Card> cards = userRepository.findById(user.getId()).orElseThrow(() -> new UnauthorizedException()).getDeckCards();
         return cards.stream().map(card -> cardDTOFactory.createResDTO(card)).collect(Collectors.toList());
     }
+
+    public CardDTO addCardToDeck(Long id) {
+        UserSpringSecurity userSS = UserService.authenticated();
+        if(userSS == null) throw new UnauthorizedException();
+
+        User user = userRepository.findById(userSS.getId()).orElseThrow(() -> new UnauthorizedException());
+
+        if(!user.getOpenCards().stream().anyMatch(openCard -> openCard.getId() == id) || user.getDeckCards().stream().anyMatch(deckCard -> deckCard.getId() == id)) throw new ForbiddenException();
+        Card card = cardRepository.getOne(id);
+
+        user.getDeckCards().add(card);
+        userRepository.save(user);
+        return cardDTOFactory.createResDTO(card);
+    }
+
+    public CardDTO removeCardFromDeck(Long id) {
+        UserSpringSecurity userSS = UserService.authenticated();
+        if(userSS == null) throw new UnauthorizedException();
+
+        User user = userRepository.findById(userSS.getId()).orElseThrow(() -> new UnauthorizedException());
+
+        if(!user.getDeckCards().stream().anyMatch(deckCard -> deckCard.getId() == id)) throw new ForbiddenException();
+        Card card = cardRepository.getOne(id);
+
+        user.getDeckCards().removeIf(deckCard -> deckCard.getId() == id);
+        userRepository.save(user);
+        return cardDTOFactory.createResDTO(card);
+    }
 }

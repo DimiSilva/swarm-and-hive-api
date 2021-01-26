@@ -6,10 +6,7 @@ import com.eijteam.swarm.and.hive.modules.card.entities.Card;
 import com.eijteam.swarm.and.hive.modules.card.services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,5 +38,17 @@ public class CardController {
     public ResponseEntity<List<CardDTO>> findUserDeckCards(){
         List<CardDTO> cards = cardService.findUserDeckCards();
         return ResponseEntity.ok().body(cards);
+    }
+
+    @PostMapping(value = "/add-to-deck/{id}")
+    public ResponseEntity<CardDTO> addCardToDeck(@PathVariable Long id) {
+        CardDTO card = cardService.addCardToDeck(id);
+        return ResponseEntity.ok().body(card);
+    }
+
+    @PostMapping(value = "/remove-from-deck/{id}")
+    public ResponseEntity<CardDTO> removeCardFromDeck(@PathVariable Long id) {
+        CardDTO card = cardService.removeCardFromDeck(id);
+        return ResponseEntity.ok().body(card);
     }
 }

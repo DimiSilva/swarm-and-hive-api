@@ -14,4 +14,5 @@ public class StageDTO {
     public Difficulty difficulty;
     public Card rewardCard;
     public Set<Wave> waves = new HashSet<>();
+    public boolean completed;
 }
